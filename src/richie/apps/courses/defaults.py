@@ -217,6 +217,15 @@ PAGE_EXTENSION_TOOLBAR_ITEM_POSITION = getattr(
     settings, "RICHIE_PAGE_EXTENSION_TOOLBAR_ITEM_POSITION", 4
 )
 
+ORGANIZATION_TEMPLATES = getattr(
+    settings,
+    "RICHIE_ORGANIZATION_TEMPLATES",
+    [
+        ("courses/plugins/organization.html", _("Default")),
+        ("courses/plugins/organization_small.html", _("Small")),
+    ],
+)
+
 # For each type of page we define:
 #   - the `reverse_id` of the page under which pages should be created via the wizard,
 #   - the template to be used when creating a new page of this type,

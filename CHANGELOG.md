@@ -13,6 +13,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Paginate the course search results view.
 - Add a CSS class to move content offscreen so it's only available for users
   of assistive technologies.
+- Add a template option for organization glimpse
 
 ## Changed
 

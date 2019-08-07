@@ -9,6 +9,7 @@ from cms.plugin_pool import plugin_pool
 
 from richie.apps.core.defaults import PLUGINS_GROUP
 
+from .defaults import ORGANIZATION_TEMPLATES
 from .forms import LicencePluginForm
 from .models import (
     BlogPostPluginModel,
@@ -27,9 +28,10 @@ class OrganizationPlugin(CMSPluginBase):
     """
 
     cache = True
+    fieldsets = ((None, {"fields": ["page", "template"]}),)
     model = OrganizationPluginModel
     module = PLUGINS_GROUP
-    render_template = "courses/plugins/organization.html"
+    render_template = ORGANIZATION_TEMPLATES[0][0]
 
     def render(self, context, instance, placeholder):
         context.update(
@@ -39,6 +41,7 @@ class OrganizationPlugin(CMSPluginBase):
                 "placeholder": placeholder,
             }
         )
+        self.render_template = instance.template
         return context
 
 

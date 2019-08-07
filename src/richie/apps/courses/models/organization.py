@@ -221,6 +221,13 @@ class OrganizationPluginModel(PagePluginMixin, CMSPlugin):
             "organization__isnull": False,  # limit to pages linked to an organization object
         },
     )
+    template = models.CharField(
+        _("Template"),
+        max_length=150,
+        choices=defaults.ORGANIZATION_TEMPLATES,
+        default=defaults.ORGANIZATION_TEMPLATES[0][0],
+        help_text=_("Optional template for custom look."),
+    )
 
     class Meta:
         db_table = "richie_organization_plugin"

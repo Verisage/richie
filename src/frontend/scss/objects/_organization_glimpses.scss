@@ -71,6 +71,18 @@ $richie-org-glimpse-item-empty-textalign: left !default;
     flex-basis: calc(25% - #{$richie-org-glimpse-item-gutter * 2});
   }
 
+  &__small {
+    flex-basis: calc(50% - #{$richie-org-glimpse-item-gutter * 2});
+
+    @include media-breakpoint-up(sm) {
+      flex-basis: calc(33% - #{$richie-org-glimpse-item-gutter * 2});
+    }
+
+    @include media-breakpoint-up(xl) {
+      flex-basis: calc(20% - #{$richie-org-glimpse-item-gutter * 2});
+    }
+  }
+
   &__logo {
     position: relative;
     width: 100%;
