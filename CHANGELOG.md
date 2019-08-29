@@ -8,6 +8,11 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix add plugin to team and organization on fragment_course_content template
+  when they are empty.
+
 ## [1.8.2] - 2019-08-29
 
 ### Changed
