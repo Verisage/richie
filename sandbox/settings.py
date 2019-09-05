@@ -53,6 +53,75 @@ class DRFMixin:
     }
 
 
+class ConfigurePackageMixin:
+    """
+    Enable configuring of a package in a mixin
+    """
+    def _append_to_installed_apps(self, app_name):
+        """Adds app_name to the end of INSTALLED_APPS"""
+        if app_name not in self.INSTALLED_APPS:
+            self.INSTALLED_APPS.append(app_name)
+
+    def _add_to_middleware(self, new, position=None):
+        """Insert middleware at begining, end, or after other middleware, defaulting to top"""
+        middlewares = getattr(self, "MIDDLEWARE", None)
+        if middlewares is not None:
+            if new not in middlewares:
+                if position == 'top':
+                    middlewares.insert(0, new)
+                elif position == 'end':
+                    middlewares.insert(-1, new)
+                else:
+                    try:
+                        index = (
+                            middlewares.index(position) + 1
+                        )
+                    except ValueError:
+                        index = 0
+                    middlewares.insert(index, new)
+
+    def _add_to_internal_ips(self, ip_address):
+        """Add new ip_address INTERNAL_IPS"""
+        try:
+            self.INTERNAL_IPS += [ip_address]  # pylint: disable=invalid-name
+        except AttributeError:
+            self.INTERNAL_IPS = [ip_address]  # pylint: disable=invalid-name
+
+
+class DebugToolbarMixin(ConfigurePackageMixin):
+    """
+    Django Debug Toolbar configuration mixin.
+    """
+    @property
+    def ENABLE_DEBUG_TOOLBAR(self):  # pylint: disable=C0103
+        """enable django debug toolbar"""
+        enabled = values.BooleanValue(
+            True,
+            environ_name="ENABLE_DEBUG_TOOLBAR",
+            environ_prefix=None,
+        )
+        if enabled:
+            try:
+                import debug_toolbar  # noqa: F401 pylint: disable=W0611
+                self._append_to_installed_apps('debug_toolbar')
+                self._add_to_middleware(
+                    new='debug_toolbar.middleware.DebugToolbarMiddleware',
+                    position='django.middleware.gzip.GZipMiddleware',
+                )
+                self._add_to_internal_ips('127.0.0.1')
+            except ImportError:
+                return False
+        return enabled
+
+    @property
+    def DEBUG_TOOLBAR_CONFIG(self):  # pylint: disable=invalid-name
+        """Configure debug-toolbar to follow the ENABLE_DEBUG_TOOLBAR setting"""
+        return {
+            'SHOW_COLLAPSED': True,
+            'SHOW_TOOLBAR_CALLBACK': lambda request: self.ENABLE_DEBUG_TOOLBAR
+        }
+
+
 class Base(DRFMixin, RichieCoursesConfigurationMixin, Configuration):
     """
     This is the base configuration every configuration (aka environnement) should inherit from. It
@@ -147,7 +216,7 @@ class Base(DRFMixin, RichieCoursesConfigurationMixin, Configuration):
         }
     ]
 
-    MIDDLEWARE = (
+    MIDDLEWARE = [
         "cms.middleware.utils.ApphookReloadMiddleware",
         "django.middleware.security.SecurityMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
@@ -162,9 +231,9 @@ class Base(DRFMixin, RichieCoursesConfigurationMixin, Configuration):
         "cms.middleware.page.CurrentPageMiddleware",
         "cms.middleware.toolbar.ToolbarMiddleware",
         "cms.middleware.language.LanguageCookieMiddleware",
-    )
+    ]
 
-    INSTALLED_APPS = (
+    INSTALLED_APPS = [
         # Django
         "djangocms_admin_style",
         "django.contrib.auth",
@@ -203,7 +272,7 @@ class Base(DRFMixin, RichieCoursesConfigurationMixin, Configuration):
         "dockerflow.django",
         "parler",
         "rest_framework",
-    )
+    ]
 
     # Languages
     # - Django
@@ -305,7 +374,7 @@ class Base(DRFMixin, RichieCoursesConfigurationMixin, Configuration):
             )
 
 
-class Development(Base):
+class Development(DebugToolbarMixin, Base):
     """
     Development environment settings
 

@@ -44,3 +44,11 @@ if settings.DEBUG:
         + staticfiles_urlpatterns()
         + urlpatterns
     )
+    try:
+        if settings.ENABLE_DEBUG_TOOLBAR:
+            import debug_toolbar
+            urlpatterns = [
+                url(r'__debug__/', include(debug_toolbar.urls)),
+            ] + urlpatterns
+    except AttributeError:
+        pass
