@@ -104,6 +104,8 @@ COPY . /app/
 # dependencies
 RUN pip uninstall -y richie
 RUN pip install -e .[dev]
+RUN pip uninstall -y django-cms
+RUN pip install -e /app/src/django-cms
 
 # Install dockerize. It is used to ensure that the database service is accepting
 # connections before trying to access it from the main application.
