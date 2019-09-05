@@ -4,7 +4,8 @@ from django.conf import settings
 from .utils import pick_image
 
 NB_OBJECTS = {
-    "courses": 75,
+    # "courses": 75,
+    "courses": 500,
     "course_courseruns": 5,
     "course_icons": 3,
     "course_organizations": 3,
