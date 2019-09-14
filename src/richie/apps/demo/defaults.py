@@ -5,7 +5,7 @@ from .utils import pick_image
 
 NB_OBJECTS = {
     # "courses": 75,
-    "courses": 500,
+    "courses": 200,
     "course_courseruns": 5,
     "course_icons": 3,
     "course_organizations": 3,
